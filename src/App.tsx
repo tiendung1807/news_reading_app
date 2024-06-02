@@ -1,38 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import Parser from 'rss-parser';
 
 function App() {
-  const [articles, setArticles] = useState([]);
+    const [articles, setArticles] = useState([]);
 
-  // Phương thức để tải danh sách bài viết từ API hoặc nguồn dữ liệu khác
-  const fetchArticles = async () => {
-    try {
-      // Gọi API hoặc thực hiện các tác vụ để lấy danh sách bài viết
-      const response = await fetch('https://example.com/api/articles');
-      const data = await response.json();
+    useEffect(() => {
+        fetchRss();
+    }, []);
 
-      // Cập nhật danh sách bài viết
-      setArticles(data);
-    } catch (error) {
-      console.error('Failed to fetch articles:', error);
-    }
-  };
+    const fetchRss = async () => {
+        try {
+            const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'; // Sử dụng proxy để tránh vấn đề CORS
+            const RSS_FEED_URL = 'https://thethao247.vn/rss.html'; // URL của RSS feed từ Thể thao 247
 
-  // Phương thức để hiển thị danh sách bài viết
-  const renderArticles = () => {
-    return articles.map((article) => (
-        <div key={article.id} className="article">
-          <h2>{article.title}</h2>
-          <p>{article.content}</p>
-        </div>
-    ));
-  };
+            const parser = new Parser();
+            const feed = await parser.parseURL(CORS_PROXY + RSS_FEED_URL);
+
+            setArticles(feed.items);
+        } catch (error) {
+            console.error('Failed to fetch RSS feed:', error);
+        }
+    };
+
+    const renderArticles = () => {
+        return articles.map((article) => (
+            <div key={article.guid} className="article">
+                <h2>{article.title}</h2>
+                <p>{article.contentSnippet}</p>
+                <a href={article.link}>Read more</a>
+            </div>
+        ));
+    };
+
 
   return (
       <div className="App">
         <header className="App-header">
-          <h1>News App</h1>
+          <h1>The thao 247</h1>
         </header>
 
         <button onClick={fetchArticles}>Load Articles</button>
