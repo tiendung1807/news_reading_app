@@ -1,6 +1,6 @@
 import {createBrowserRouter} from "react-router-dom";
-import Error from "../component/Error";
-import {News} from "../component/News";
+import Error from "../Components/Error";
+import {News} from "../Components/News";
 
 export const router = createBrowserRouter([
      {
