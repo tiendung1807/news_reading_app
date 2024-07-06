@@ -2,12 +2,12 @@ import React from 'react';
 import './App.css';
 import Header from './Component/Header';
 import Footer from './Component/Footer';
-import Body from './Component/Body';
+import CategoryArticleBody from "./Component/CategoryArticleBody";
 function App(){
 return (
 <div>
     <Header></Header>
-    <Body></Body>
+    <CategoryArticleBody></CategoryArticleBody>
     <Footer></Footer>
 
 </div>
