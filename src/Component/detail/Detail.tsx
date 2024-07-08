@@ -4,7 +4,7 @@ import axios from 'axios'; // Thư viện để đọc rss
 import cheerio from 'cheerio'; // Thư viện xử lý rss
 import styles from '../detail/Detail.module.css';
 import {Link, useParams} from 'react-router-dom';
-// import {useDispatch, useSelector} from 'react-redux'; // để lưu trữu dữ liệu cho project
+// import {useDispatch, useSelector} from 'react-redux'; // để lưu trữ dữ liệu cho project
 
 // Định nghĩa interface cho chi tiết bài viết
 interface DetailContent {
@@ -27,13 +27,9 @@ const Detail: React.FC = () => {
     const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
     const [commentContent, setCommentContent] = useState<string>(''); // State để lưu nội dung bình luận
     function convertToSlug(text: string) {
-        // Chuyển đổi chuỗi thành chữ thường
         let slug = text.toLowerCase();
-        // Loại bỏ các ký tự đặc biệt, chỉ giữ lại chữ cái và số
         slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        // Thay thế khoảng trắng bằng dấu gạch ngang
         slug = slug.replace(/\s+/g, '-');
-
         return slug;
     }
     // hàm chuển đổi chuỗi có các ký tự đặc biệt
@@ -44,16 +40,13 @@ const Detail: React.FC = () => {
             '&lt;': '<',
             '&gt;': '>',
             '&quot;': '"',
-            // Thêm các ký tự HTML entities khác nếu cần
         };
 
-        // Thay thế các ký tự HTML entities cụ thể
         Object.keys(entities).forEach(entity => {
             const regex = new RegExp(entity, 'g');
             text = text.replace(regex, entities[entity]);
         });
 
-        // Sử dụng DOMParser để giải mã các ký tự còn lại
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
         return doc.documentElement.textContent || text;
@@ -80,49 +73,46 @@ const Detail: React.FC = () => {
                 });
 
                 // Extract content from the HTML as per your requirement
-                const title = decodeHTMLEntities($('.big_title').text().trim());
-                const content = $('#content_detail').html() || $('.txt_content').html() || '';
-                const dateUp = $('.bread-crumb-detail__time').text();
+                const title = decodeHTMLEntities($('.big_title').text().trim() || $('.title-detail').text().trim());
+                const content = $('#content_detail').html() || $('.txt_content').html() || $('.col740').html() || '';
+                const dateUp = $('.mr-auto').find('.post-time').text() || $('.time').text();
+                console.log('dateUp : ' + $('.mr-auto').find('.post-time').text())
                 const demo = decodeHTMLEntities($('.sapo_detail').text());
                 const img = $('.expNoEdit').find('a').find('img').attr("data-src");
-                console.log('img : ' + img)
                 const navElements = $('.breadcrumb a').toArray();
                 const navItems = navElements.map((li) => $(li).text().trim());
                 const navItemsFiltered = navItems.slice(1);  // Loại bỏ phần tử đầu tiên
                 setDetail({title, demo, content, dateUp, navItems: navItemsFiltered});
+                const rssUrl = 'https://thethao247.vn/trang-chu.rss';
+                const fetchRSS = async () => {
+                    try {
+                        const response = await axios.get(rssUrl);
+                        const data = response.data;
 
-                // const rssUrl = 'https://vietnamnet.vn/' + convertToSlug(navItemsFiltered[0]) + '.rss';
-                // console.log('navItemsFiltered[0] :' + navItemsFiltered[0])
-                // console.log('rssUrl :' + rssUrl)
-                // const fetchRSS = async () => {
-                //     try {
-                //         const response = await axios.get(rssUrl);
-                //         const data = response.data;
-                //
-                //         // Parse RSS feed
-                //         const parser = new DOMParser();
-                //         const xml = parser.parseFromString(data, 'application/xml');
-                //
-                //         const items = Array.from(xml.querySelectorAll('item')).map(item => {
-                //             const title = decodeHTMLEntities(item.querySelector('title')?.textContent || '');
-                //             const link = item.querySelector('link')?.textContent || '';
-                //             const description = item.querySelector('description')?.textContent || '';
-                //
-                //             // Use cheerio to parse the description HTML and extract the image URL
-                //             const $ = cheerio.load(description);
-                //             const imageUrl = $('img').attr('src') || '';
-                //             return {
-                //                 title,
-                //                 link,
-                //                 imageUrl
-                //             };
-                //         });
-                //         setFeedItems(items);
-                //     } catch (error) {
-                //         console.error('Error fetching data:', error);
-                //     }
-                // };
-                // fetchRSS();
+                        // Parse RSS feed
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, 'application/xml');
+
+                        const items = Array.from(xml.querySelectorAll('item')).map(item => {
+                            const title = decodeHTMLEntities(item.querySelector('title')?.textContent || '');
+                            const link = item.querySelector('link')?.textContent || '';
+                            const description = item.querySelector('description')?.textContent || '';
+
+                            // Use cheerio to parse the description HTML and extract the image URL
+                            const $ = cheerio.load(description);
+                            const imageUrl = $('img').attr('src') || '';
+                            return {
+                                title,
+                                link,
+                                imageUrl
+                            };
+                        });
+                        setFeedItems(items);
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                };
+                fetchRSS();
             } catch (error) {
                 console.error('Error fetching the HTML:', error);
             }
@@ -143,10 +133,10 @@ const Detail: React.FC = () => {
                 secretElements.forEach((element) => {
                     element.setAttribute('src', element.getAttribute("data-src") || ''); // Thêm thuộc tính bạn cần vào đây
                 });
-                const reLink = container.querySelectorAll('article a');
+                const reLink = container.querySelectorAll('.explus_related_1404022217_item a');
                 reLink.forEach((element) => {
                     let originalUrl = element.getAttribute("href") || ''; // Lấy đường dẫn gốc từ href
-                    element.setAttribute('href', "/detail" + originalUrl); // Cập nhật lại thuộc tính href của thẻ <a>
+                    element.setAttribute('href', "/detail" + extractLinkPath(originalUrl)); // Cập nhật lại thuộc tính href của thẻ <a>
                 });
             }
         }
@@ -163,9 +153,9 @@ const Detail: React.FC = () => {
                             </li>
                         ))}
                     </ul>
-                    <div className="bread-crumb-detail__time">{detail?.dateUp}</div>
+                    <div>{detail?.dateUp}</div>
                 </div>
-                <div className="content-detail content-mobile-change">
+                <div>
                     <h1 className={styles.contentDetailTitle}>{detail?.title || 'Loading...'}</h1>
                     <h2 className={styles.contentDetailSapo}>{detail?.demo}</h2>
                     <div className={styles.maincontent} id="maincontent"
@@ -173,22 +163,23 @@ const Detail: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {/*Mục liên quan*/}
-            {/*<div className="vnn-news-ai-suggest horizontal-box-wrapper sticky top-65 pb-15">*/}
-            {/*    <h2 className={styles.horizontalHeading}>CÓ THỂ BẠN QUAN TÂM</h2>*/}
-            {/*    <div>*/}
-            {/*        {feedItems.map((item, index) => (*/}
-            {/*            <div className={styles.horizontalItem} key={index}>*/}
-            {/*                <div className={styles.horizontalImage}><img src={item.imageUrl || 'Loading...'}*/}
-            {/*                                                             alt={item.title}/></div>*/}
-            {/*                <div className={styles.horizontalTitle}><h3><a*/}
-            {/*                    href={'/detail/' + extractLinkPath(item.link)}*/}
-            {/*                    title={item.title}>{item.title}</a></h3>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        ))}*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            {/*Bài liên quan*/}
+            <div className={styles.relateDetail}>
+                <h2 className={styles.horizontalHeading}>BÀI LIÊN QUAN</h2>
+                <div>
+                    {feedItems.map((item, index) => (
+                        <div className={styles.horizontalItem} key={index}>
+                            <span style={{fontSize:'20px',paddingRight:'10px',paddingTop:'25px',fontWeight:'700',color:'#ababab'}}>{index + 1}</span>
+                            <div className={styles.horizontalImage}><img src={item.imageUrl || 'Loading...'}
+                                                                         alt={item.title}/></div>
+                            <div className={styles.horizontalTitle}><h3><a
+                                href={'/detail/' + extractLinkPath(item.link)}
+                                title={item.title}>{item.title}</a></h3>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
