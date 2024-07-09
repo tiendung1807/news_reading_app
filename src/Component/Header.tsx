@@ -140,27 +140,6 @@ function Header() {
                                                    title="Tennis">
                                                     Tennis
                                                 </a>
-                                                <a href="#" className="more-sub-cate">Xem thêm <i
-                                                    className="fa fa-angle-down"
-                                                    aria-hidden="true"></i>
-                                                    <ul className="list-more-sub-cate">
-                                                        <li>
-                                                            <a href="https://thethao247.vn/cau-long-c44/" title="Cầu lông">
-                                                                Cầu lông
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="https://thethao247.vn/chay-bo-c287/" title="Chạy bộ">
-                                                                Chạy bộ
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="https://thethao247.vn/golf-c42/" title="Golf">
-                                                                Golf
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </a>
                                             </nav>
                                         </div>
                                     </div>
