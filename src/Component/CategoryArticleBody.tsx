@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import '../CSS/CategoryArticleBody.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faAngleRight} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
@@ -13,6 +13,10 @@ interface RssItem {
     imgUrl: string;
     textContent: string;
     pubDate: string;
+}
+
+interface CategoryArticleBodyProps {
+    rssUrl: string;
 }
 
 const extractImageUrlFromDescription = (description: string): string => {
@@ -35,132 +39,128 @@ const extractTextContentFromDescription = (description: string): string => {
     return doc.body.textContent || '';
 };
 
+const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => {
+    const [rssItems, setRssItems] = useState<RssItem[]>([]);
+    const [visibleItemsCount, setVisibleItemsCount] = useState(10);
 
-const CategoryArticleBody: React.FC = () => {
-        const [rssItems, setRssItems] = useState<RssItem[]>([]);
-        const [visibleItemsCount, setVisibleItemsCount] = useState(10);
-        const rssUrl = 'https://thethao247.vn/bong-da-viet-nam-c1.rss';
-
-        useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch(`${CORS_PROXY}${rssUrl}`);
-                    if (!response.ok) {
-                        throw new Error('Không thể tải dữ liệu RSS');
-                    }
-                    const text = await response.text();
-                    const parser = new DOMParser();
-                    const xml = parser.parseFromString(text, 'text/xml');
-                    const items = xml.querySelectorAll('item');
-                    const rssItemsArray: RssItem[] = Array.from(items, (item) => {
-                        const description = item.querySelector('description')?.textContent || '';
-                        const aHref = extractLinkUrlFromDescription(description);
-                        const imgUrl = extractImageUrlFromDescription(description);
-                        const textContent = extractTextContentFromDescription(description);
-                        return {
-                            title: item.querySelector('title')?.textContent || '',
-                            link: item.querySelector('link')?.textContent || '',
-                            description,
-                            aHref,
-                            imgUrl,
-                            textContent,
-                            pubDate: item.querySelector('pubDate')?.textContent || ''
-                        };
-                    });
-                    setRssItems(rssItemsArray);
-                } catch (error) {
-                    console.error('Lỗi khi lấy dữ liệu RSS:', error);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${CORS_PROXY}${rssUrl}`);
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu RSS');
                 }
-            };
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, 'text/xml');
+                const items = xml.querySelectorAll('item');
+                const rssItemsArray: RssItem[] = Array.from(items, (item) => {
+                    const description = item.querySelector('description')?.textContent || '';
+                    const aHref = extractLinkUrlFromDescription(description);
+                    const imgUrl = extractImageUrlFromDescription(description);
+                    const textContent = extractTextContentFromDescription(description);
+                    return {
+                        title: item.querySelector('title')?.textContent || '',
+                        link: item.querySelector('link')?.textContent || '',
+                        description,
+                        aHref,
+                        imgUrl,
+                        textContent,
+                        pubDate: item.querySelector('pubDate')?.textContent || ''
+                    };
+                });
+                setRssItems(rssItemsArray);
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu RSS:', error);
+            }
+        };
 
-            fetchData();
-        }, [rssUrl]);
+        fetchData();
+    }, [rssUrl]);
 
-        const handleLoadMore = () => {
-            setVisibleItemsCount(prevCount => prevCount + 3)
-        }
-        return (
-            <main>
-                <div className="container">
-                    <div className="breadcrumb">
-                        <a href="https://thethao247.vn" title="Trang chủ">Trang chủ</a>
-                        <FontAwesomeIcon icon={faAngleRight}/>
-                        <span className="active" title="Bóng đá Việt Nam">Bóng đá Việt Nam</span>
-                    </div>
-                    <div className="content">
-                        <h1 className="big_title">Bóng đá Việt Nam</h1>
-                        {rssItems.length > 0 && (
-                            <div className="cover">
-                                <a href={rssItems[0].link} className="thumb" title={rssItems[0].title}>
-                                    <img
-                                        src={rssItems[0].imgUrl}
-                                        width="540"
-                                        height="358"
-                                        alt={rssItems[0].title}
-                                    />
+    const handleLoadMore = () => {
+        setVisibleItemsCount(prevCount => prevCount + 3);
+    };
+
+    return (
+        <main>
+            <div className="container">
+                <div className="breadcrumb">
+                    <a href="https://thethao247.vn" title="Trang chủ">Trang chủ</a>
+                    <FontAwesomeIcon icon={faAngleRight}/>
+                    <span className="active" title="Bóng đá Việt Nam">Bóng đá Việt Nam</span>
+                </div>
+                <div className="content">
+                    <h1 className="big_title">Bóng đá Việt Nam</h1>
+                    {rssItems.length > 0 && (
+                        <div className="cover">
+                            <a href={rssItems[0].link} className="thumb" title={rssItems[0].title}>
+                                <img
+                                    src={rssItems[0].imgUrl}
+                                    width="540"
+                                    height="358"
+                                    alt={rssItems[0].title}
+                                />
+                            </a>
+                            <div className="text">
+                                <a href={rssItems[0].link} className="title" title={rssItems[0].title}>
+                                    {rssItems[0].title}
                                 </a>
-                                <div className="text">
-                                    <a href={rssItems[0].link} className="title" title={rssItems[0].title}>
-                                        {rssItems[0].title}
-                                    </a>
-                                    <p className="sapo" dangerouslySetInnerHTML={{__html: rssItems[0].textContent}}/>
-                                </div>
+                                <p className="sapo" dangerouslySetInnerHTML={{ __html: rssItems[0].textContent }}/>
                             </div>
-                        )}
-                        <ul className="list-news">
-                            {rssItems.slice(1, 4).map((item, index) => (
-                                <li key={index}>
-                                    <a href={item.link} className="thumb" title={item.title}>
-                                        <img
-                                            src={item.imgUrl}
-                                            width="400"
-                                            height="264"
-                                            alt={item.title}
-                                        />
-                                    </a>
-                                    <h2 className="title">
-                                        <a href={item.link} title={item.title}>{item.title}</a>
-                                    </h2>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="caption">
-                        <h2>
-                        <span className="title" title="Bóng đá Việt Nam mới nhất">
-                            <span>Mới nhất</span>
-                        </span>
-                        </h2>
-                    </div>
-                    <ul id="box_latest_more" className="box_latest_more">
-                        {rssItems.slice(4, visibleItemsCount).map((item, index) => (
+                        </div>
+                    )}
+                    <ul className="list-news">
+                        {rssItems.slice(1, 4).map((item, index) => (
                             <li key={index}>
                                 <a href={item.link} className="thumb" title={item.title}>
                                     <img
                                         src={item.imgUrl}
-                                        width="392"
-                                        height="250"
+                                        width="400"
+                                        height="264"
                                         alt={item.title}
                                     />
                                 </a>
-                                <div className="text">
-                                    <h3>
-                                        <a href={item.link} className="title" title={item.title}>{item.title}</a>
-                                    </h3>
-                                    <p className="sapo" dangerouslySetInnerHTML={{__html: item.textContent}}/>
-                                </div>
+                                <h2 className="title">
+                                    <a href={item.link} title={item.title}>{item.title}</a>
+                                </h2>
                             </li>
                         ))}
                     </ul>
-                    {visibleItemsCount < rssItems.length && (
-                        <button id="loadMoreNews" className="btn_loadMore"
-                                onClick={handleLoadMore}>Xem
-                            thêm
-                        </button>)}
                 </div>
-            </main>
-        );
-    }
-;
+                <div className="caption">
+                    <h2>
+                        <span className="title" title="Bóng đá Việt Nam mới nhất">
+                            <span>Mới nhất</span>
+                        </span>
+                    </h2>
+                </div>
+                <ul id="box_latest_more" className="box_latest_more">
+                    {rssItems.slice(4, visibleItemsCount).map((item, index) => (
+                        <li key={index}>
+                            <a href={item.link} className="thumb" title={item.title}>
+                                <img
+                                    src={item.imgUrl}
+                                    width="392"
+                                    height="250"
+                                    alt={item.title}
+                                />
+                            </a>
+                            <div className="text">
+                                <h3>
+                                    <a href={item.link} className="title" title={item.title}>{item.title}</a>
+                                </h3>
+                                <p className="sapo" dangerouslySetInnerHTML={{ __html: item.textContent }}/>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {visibleItemsCount < rssItems.length && (
+                    <button id="loadMoreNews" className="btn_loadMore" onClick={handleLoadMore}>Xem thêm</button>
+                )}
+            </div>
+        </main>
+    );
+};
 
 export default CategoryArticleBody;

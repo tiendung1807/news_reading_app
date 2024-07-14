@@ -204,7 +204,7 @@
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s;
-    width: 100px; /* Điều chỉnh chiều rộng của button */
+    width: 120px; /* Điều chỉnh chiều rộng của button */
     text-align: center; /* Căn văn bản vào giữa */
 }
 
