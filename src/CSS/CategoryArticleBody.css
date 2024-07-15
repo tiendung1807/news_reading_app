@@ -1,0 +1,214 @@
+.container {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumb a.active {
+    color: #000;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.cover {
+    display: flex;
+    align-items: stretch; /* Đảm bảo các thành phần bên trong căn chỉnh theo chiều cao */
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cover .thumb {
+    flex: 0 0 40%; /* Điều chỉnh tỷ lệ chiều rộng của hình ảnh */
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.cover .thumb img {
+    width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng và không bị vỡ */
+    height: auto;
+    display: block;
+    object-fit: cover; /* Đảm bảo hình ảnh bao phủ đầy đủ khu vực */
+}
+
+.cover .text {
+    flex: 1;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-align: left;
+    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 0 10px 10px 0; /* Điều chỉnh bo góc cho phần nội dung */
+}
+
+.cover .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.cover .sapo {
+    font-size: 16px;
+    color: #ccc;
+    margin-top: 5px;
+    line-height: 1.6; /* Điều chỉnh khoảng cách giữa các dòng */
+}
+
+.cover .text:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+
+.content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+.big_title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.list-news {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.list-news li {
+    flex: 1 1 calc(33.333% - 20px);
+    max-width: calc(33.333% - 20px);
+}
+
+.list-news .thumb {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.list-news .thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.list-news .thumb img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.list-news .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+.caption {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.caption .title {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.caption .title span {
+    color: #333;
+}
+
+.box_latest_more {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.box_latest_more li {
+    flex: 1 1 calc(33.333% - 20px);
+    max-width: calc(33.333% - 20px);
+}
+
+.box_latest_more .thumb {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.box_latest_more .thumb:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.box_latest_more .thumb img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.box_latest_more .text {
+    margin-top: 10px;
+}
+
+.box_latest_more .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.sapo {
+    font-size: 16px;
+    color: #666;
+}
+
+.btn_loadMore {
+    display: block; /* Đảm bảo nút button sẽ chiếm toàn bộ chiều ngang của phần chứa */
+    margin: 20px auto; /* Đưa nút về giữa màn hình */
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 120px; /* Điều chỉnh chiều rộng của button */
+    text-align: center; /* Căn văn bản vào giữa */
+}
+
+
+.btn_loadMore:hover {
+    background-color: #0056b3;
+}

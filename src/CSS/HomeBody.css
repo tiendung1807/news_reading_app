@@ -1,0 +1,39 @@
+.home-body {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.featured-articles,
+.latest-news {
+    margin-bottom: 30px;
+}
+
+.featured-articles .articles-container,
+.latest-news .news-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.article,
+.news-item {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex: 1 1 calc(33% - 20px);
+}
+
+.article h3,
+.news-item {
+    margin: 0 0 10px;
+}
+
+.article p {
+    margin: 0;
+}
