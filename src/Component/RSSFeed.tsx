@@ -145,17 +145,20 @@ const RSSFeed: React.FC = () => {
 
                                         <p className="sapo" dangerouslySetInnerHTML={{__html: item.description}}/>
                                         <p className="date">{formatDate(item.pubDate)}</p>
-                                        <div className={"load-more"}>
-                                            <button className="btn_loadMore"
+                                        <div className={"load-more-news-detail"}>
+                                            <a className="btn_loadMore-news-detail"
                                                     onClick={() => handleItemClick(item.link)}>Xem thêm
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                         {visibleItemsCount < sortedItems.length && (
-                            <button id="loadMoreNews" className="btn_loadMore" onClick={handleLoadMore}>Xem thêm</button>
+                            <div id="loadMoreNews">
+                                <button  className="btn_loadMore" onClick={handleLoadMore}>Xem thêm
+                                </button>
+                            </div>
                         )}
                     </div>
                 )}
