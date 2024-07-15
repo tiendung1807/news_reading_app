@@ -1,3 +1,232 @@
-.body{
-    height: 1999px;
+
+.box_latest{
+    margin: 12px 12px;
+}
+.box_latest .caption {
+    border-bottom: 1px solid #254892;
+    height: 22px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between
+}
+
+.box_latest .caption .title {
+    padding: 0 10px;
+    background-color: #0f408b;
+    position: relative
+}
+
+.box_latest .caption .title:before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    left: 30%;
+    top: 0;
+    width: 200px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 23px;
+    background: url(https://cdn-img.thethao247.vn/frontend/images/bg-min.svg?v=1) left -839px no-repeat;
+}
+
+.box_latest .caption .title:before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    left: 30%;
+    top: 0;
+    width: 200px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 23px;
+    background: url(https://cdn-img.thethao247.vn/frontend/images/bg-min.svg?v=1) left -839px no-repeat
+}
+
+.box_latest .caption .title span {
+    z-index: 1;
+    position: relative;
+    font-size: 15px;
+    line-height: 24px;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 600;
+    display: inline-block
+}
+
+.box_latest .caption .more {
+    font-size: 10px;
+    line-height: 23px;
+    color: #254892;
+    text-transform: uppercase;
+    font-weight: 700
+}
+
+.box_latest .caption .more:hover {
+    text-decoration: underline
+}
+
+.box_latest .caption .more i {
+    font-size: 8px;
+    line-height: 23px
+}
+
+@media screen and (max-width: 480px) {
+    .box_latest .caption {
+        margin:0 -15px 15px
+    }
+
+    .box_latest .caption .title {
+        padding-left: 15px
+    }
+
+    .box_latest .caption .more {
+        padding-right: 15px
+    }
+}
+
+.box_latest .content li {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #ddd
+}
+
+.box_latest .content li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+    margin-bottom: 0
+}
+
+.box_latest .content li .thumb {
+    width: 124px;
+    margin-right: 12px;
+    position: relative
+}
+
+.box_latest .content li .thumb i {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 18px;
+    color: #fff
+}
+
+.box_latest .content li .text {
+    -webkit-box-flex: 1;
+    flex: 1 0 0;
+    -ms-flex: 1 0 0;
+    -webkit-flex: 1 0 0
+}
+
+.box_latest .content li .text .title {
+    font-size: 15px;
+    line-height: 1.5;
+    display: block
+}
+
+.box_latest .content li .text .date {
+    float: right;
+    padding-top: 10px;
+    font-size: 13px;
+    color: #555
+}
+
+.box_latest .content li .title_cat {
+    background: url(https://cdn-img.thethao247.vn/frontend/images/bg-min.svg?v=1) -50px -864px no-repeat;
+    padding: 5px 4px 4px;
+    font-size: 9px;
+    color: #0d6eb7;
+    text-transform: uppercase;
+    margin-bottom: 10px
+}
+
+@media screen and (max-width: 580px) {
+    .box_latest .content li .title_cat {
+        position:relative;
+        display: inline-block;
+        font-size: 9px;
+        padding: 2px 5px 1px;
+        color: #fff;
+        line-height: normal;
+        text-transform: uppercase;
+        background: #e83c42;
+        background: -webkit-gradient(linear,left top,right top,color-stop(0,#e83c42),to(#ff9000));
+        background: linear-gradient(to right,#e83c42 0,#ff9000 100%)
+    }
+
+    .box_latest .content li .title_cat:after {
+        content: '';
+        display: block;
+        width: 0;
+        height: 0;
+        border-right: 8px solid transparent;
+        border-top: 8px solid #ff9000;
+        position: absolute;
+        top: 0;
+        left: 100%
+    }
+}
+
+.box_latest .content li .text .title {
+    font-weight: 500
+}
+
+.box_latest.lazy_thumb .caption {
+    color: #444;
+    background-color: #444;
+    height: 20px;
+    border-radius: 100px;
+    margin: 5px 0 15px;
+    min-width: 100px;
+    opacity: .1;
+    -webkit-animation: fading 1.5s infinite;
+    animation: fading 1.5s infinite;
+    width: 100%
+}
+
+.box_latest.lazy_thumb .thumb {
+    height: 85.25px;
+    background: #f4f4f4
+}
+
+.box_latest.lazy_thumb .title {
+    width: 100%
+}
+
+.box_latest.lazy_thumb .line {
+    display: block;
+    background-color: #444;
+    height: 12px;
+    border-radius: 100px;
+    margin: 8px 0;
+    opacity: .1;
+    -webkit-animation: fading 1.5s infinite;
+    animation: fading 1.5s infinite
+}
+
+.box_latest.lazy_thumb .line-half {
+    width: 50%
+}
+
+.box_latest.lazy_thumb .date {
+    width: 25%;
+    display: block;
+    background-color: #444;
+    height: 12px;
+    border-radius: 100px;
+    margin: 5px 0;
+    min-width: 50px;
+    opacity: .1;
+    -webkit-animation: fading 1.5s infinite;
+    animation: fading 1.5s infinite;
+    text-indent: -9999px
 }
