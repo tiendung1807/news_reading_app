@@ -5,6 +5,10 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
+interface RssChannel {
+    title: string;
+}
+
 interface RssItem {
     title: string;
     link: string;
@@ -40,6 +44,7 @@ const extractTextContentFromDescription = (description: string): string => {
 };
 
 const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => {
+    const [rssChannel, setRssChannel] = useState<RssChannel | null>(null);
     const [rssItems, setRssItems] = useState<RssItem[]>([]);
     const [visibleItemsCount, setVisibleItemsCount] = useState(10);
 
@@ -53,7 +58,15 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                 const text = await response.text();
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, 'text/xml');
+                const channel = xml.querySelector('channel');
                 const items = xml.querySelectorAll('item');
+
+                if (channel) {
+                    setRssChannel({
+                        title: channel.querySelector('title')?.textContent || ''
+                    });
+                }
+
                 const rssItemsArray: RssItem[] = Array.from(items, (item) => {
                     const description = item.querySelector('description')?.textContent || '';
                     const aHref = extractLinkUrlFromDescription(description);
@@ -69,6 +82,7 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                         pubDate: item.querySelector('pubDate')?.textContent || ''
                     };
                 });
+
                 setRssItems(rssItemsArray);
             } catch (error) {
                 console.error('Lỗi khi lấy dữ liệu RSS:', error);
@@ -77,6 +91,11 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
 
         fetchData();
     }, [rssUrl]);
+
+    useEffect(() => {
+        setVisibleItemsCount(10);
+    }, [rssUrl]);
+
 
     const handleLoadMore = () => {
         setVisibleItemsCount(prevCount => prevCount + 3);
@@ -88,10 +107,10 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                 <div className="breadcrumb">
                     <a href="https://thethao247.vn" title="Trang chủ">Trang chủ</a>
                     <FontAwesomeIcon icon={faAngleRight}/>
-                    <span className="active" title="Bóng đá Việt Nam">Bóng đá Việt Nam</span>
+                    <span className="active" title="Bóng đá Việt Nam">{rssChannel?.title}</span>
                 </div>
                 <div className="content">
-                    <h1 className="big_title">Bóng đá Việt Nam</h1>
+                    <h1 className="big_title">{rssChannel?.title}</h1>
                     {rssItems.length > 0 && (
                         <div className="cover">
                             <a href={rssItems[0].link} className="thumb" title={rssItems[0].title}>

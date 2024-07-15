@@ -6,9 +6,10 @@ import {faHome, faSearch} from '@fortawesome/free-solid-svg-icons';
 
 interface HeaderProps {
     onCategoryChange: (rssUrl: string) => void;
+    onHomeClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({onCategoryChange}) => {
+const Header: React.FC<HeaderProps> = ({onCategoryChange, onHomeClick}) => {
     const BDVN = [
         {name: 'Bóng đá việt nam', url: 'https://thethao247.vn/bong-da-viet-nam-c1.rss'},
         {name: 'V-League', url: 'https://thethao247.vn/v-league-c15.rss'},
@@ -53,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({onCategoryChange}) => {
                         <div className="container">
                             <ul className="nav-content">
                                 <li>
-                                    <a href="/" title="Trang chủ thể thao 247" className="home-icon">
+                                    <a href="#" title="Trang chủ thể thao 247" className="home-icon" onClick={onHomeClick}>
                                         <FontAwesomeIcon icon={faHome} aria-hidden="true"/>
                                     </a>
                                 </li>
