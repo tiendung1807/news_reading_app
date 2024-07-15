@@ -4,7 +4,26 @@ import '../CSS/main.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHome, faSearch} from '@fortawesome/free-solid-svg-icons';
 
-function Header() {
+interface HeaderProps {
+    onCategoryChange: (rssUrl: string) => void;
+    onHomeClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({onCategoryChange, onHomeClick}) => {
+    const BDVN = [
+        {name: 'Bóng đá việt nam', url: 'https://thethao247.vn/bong-da-viet-nam-c1.rss'},
+        {name: 'V-League', url: 'https://thethao247.vn/v-league-c15.rss'},
+        {name: 'Đội tuyển Quốc gia', url: 'https://thethao247.vn/tuyen-quoc-gia-vn-c19.rss'},
+        {name: 'Bóng Đá Nữ', url: 'https://thethao247.vn/bong-da-nu-viet-nam-c20.rss'},
+        {name: 'Bóng đá trẻ', url: 'https://thethao247.vn/bong-da-c210.rss'},
+        {name: 'U23 Châu Á', url: 'https://thethao247.vn/u23-chau-a-2022-c223.rss'},
+
+    ];
+
+    const handleCategoryClick = (url: string) => {
+        onCategoryChange(url);
+    }
+
     return (
         <header id="header">
             <div className="header-top">
@@ -35,57 +54,25 @@ function Header() {
                         <div className="container">
                             <ul className="nav-content">
                                 <li>
-                                    <a href="/" title="Trang chủ thể thao 247" className="home-icon">
+                                    <a href="#" title="Trang chủ thể thao 247" className="home-icon" onClick={onHomeClick}>
                                         <FontAwesomeIcon icon={faHome} aria-hidden="true"/>
                                     </a>
                                 </li>
                                 <li>
-                                    <a className="relative" href="/euro" title="Euro">
-                                        Euro
+                                    <a className="relative" href="#"
+                                       title={BDVN[0].name}>
+                                        {BDVN[0].name}
                                     </a>
                                     <div className="cate-child">
                                         <div className="container">
                                             <nav>
-                                                <a href="/euro/426-lich-thi-dau-vong-loai-euro-2024-d281373.html"
-                                                   title="Lịch thi đấu">
-                                                    Lịch thi đấu
-                                                </a>
-                                                <a href="/livescores/chau-au/euro/results/" title="Kết quả">
-                                                    Kết quả
-                                                </a>
-                                                <a href="https://thethao247.vn/euro/72-bang-xep-hang-vck-euro-2024-moi-nhat-d324901.html"
-                                                   title="Bảng xếp hạng">
-                                                    Bảng xếp hạng
-                                                </a>
-                                            </nav>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a className="relative" href="https://thethao247.vn/bong-da-viet-nam-c1/"
-                                       title="Bóng đá Việt Nam">
-                                        Bóng đá Việt Nam
-                                    </a>
-                                    <div className="cate-child">
-                                        <div className="container">
-                                            <nav>
-                                                <a href="https://thethao247.vn/v-league-c15/" title="V-League">
-                                                    V-League
-                                                </a>
-                                                <a href="https://thethao247.vn/tuyen-quoc-gia-vn-c19/"
-                                                   title="Đội tuyển Quốc gia">
-                                                    Đội tuyển Quốc gia
-                                                </a>
-                                                <a href="https://thethao247.vn/bong-da-nu-viet-nam-c20/"
-                                                   title="Bóng Đá Nữ">
-                                                    Bóng Đá Nữ
-                                                </a>
-                                                <a href="https://thethao247.vn/bong-da-tre-c329/" title="Bóng đá trẻ">
-                                                    Bóng đá trẻ
-                                                </a>
-                                                <a href="https://thethao247.vn/u23-asian-cup" title="U23 Châu Á">
-                                                    U23 Châu Á
-                                                </a>
+                                                {BDVN.slice(1).map(category => (
+                                                    <a
+                                                        key={category.name}
+                                                        href="#" title={category.name}
+                                                        onClick={() => handleCategoryClick(category.url)}>
+                                                        {category.name}
+                                                    </a>))}
                                             </nav>
                                         </div>
                                     </div>
@@ -139,27 +126,6 @@ function Header() {
                                                 <a href="https://thethao247.vn/quan-vot-tennis-c4/"
                                                    title="Tennis">
                                                     Tennis
-                                                </a>
-                                                <a href="#" className="more-sub-cate">Xem thêm <i
-                                                    className="fa fa-angle-down"
-                                                    aria-hidden="true"></i>
-                                                    <ul className="list-more-sub-cate">
-                                                        <li>
-                                                            <a href="https://thethao247.vn/cau-long-c44/" title="Cầu lông">
-                                                                Cầu lông
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="https://thethao247.vn/chay-bo-c287/" title="Chạy bộ">
-                                                                Chạy bộ
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="https://thethao247.vn/golf-c42/" title="Golf">
-                                                                Golf
-                                                            </a>
-                                                        </li>
-                                                    </ul>
                                                 </a>
                                             </nav>
                                         </div>
