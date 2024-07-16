@@ -56,6 +56,30 @@ const Detail: React.FC = () => {
         const parts = url.split('/');
         return parts[parts.length - 1];
     };
+    const [isReading, setIsReading] = useState(false);
+
+    const synth = window.speechSynthesis;
+    const handleReadText = () => {
+        if (synth.speaking) {
+            synth.cancel();
+            setIsReading(false);
+            return;
+        }
+        const textToRead = detail?.content.replace(/<[^>]*>?/gm, '') || '';
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'vi-VN'; // Thiết lập ngôn ngữ tiếng Việt
+        utterance.onend = () => {
+            setIsReading(false);
+        };
+        synth.speak(utterance);
+        setIsReading(true);
+    };
+    const handleStopReading = () => {
+        if (synth.speaking) {
+            synth.cancel();
+            setIsReading(false);
+        }
+    };
 
     useEffect(() => {
         async function fetch() {
