@@ -3,7 +3,6 @@ import './App.css';
 import Header from './Component/Header';
 import Footer from './Component/Footer';
 import CategoryArticleBody from "./Component/CategoryArticleBody";
-import RSSFeed from './Component/RSSFeed';
 import HomeBody from "./Component/HomeBody";
 import Detail from "./Component/detail/Detail";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -28,10 +27,9 @@ const App: React.FC = () => {
                                           </Route>
                                       </Routes>
                                   </Router>
-                          {currentComponent === 'home' ? <HomeBody /> : <CategoryArticleBody rssUrl={rssUrl} />}
+                          {currentComponent === 'home' ? <HomeBody /> : <CategoryArticleBody key={rssUrl} rssUrl={rssUrl} />}
                                   <Footer/>
                           </div>
                           );
                           };
-
 export default App;
