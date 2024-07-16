@@ -5,6 +5,8 @@ import Footer from './Component/Footer';
 import CategoryArticleBody from "./Component/CategoryArticleBody";
 import RSSFeed from './Component/RSSFeed';
 import HomeBody from "./Component/HomeBody";
+import Detail from "./Component/detail/Detail";
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 const App: React.FC = () => {
                               const [currentComponent, setCurrentComponent] = useState<'home' | 'category'>('home');
@@ -18,9 +20,16 @@ const App: React.FC = () => {
                           };
                               return (
                               <div>
-                              <Header onCategoryChange={handleCategoryChange} onHomeClick={handleHomeClick}/>
+                                  <Header onCategoryChange={handleCategoryChange} onHomeClick={handleHomeClick}/>
+                                  <Router>
+                                      <Routes>
+                                          <Route path="/">
+                                              <Route path='/detail/:link' element={<Detail/>}></Route>
+                                          </Route>
+                                      </Routes>
+                                  </Router>
                           {currentComponent === 'home' ? <HomeBody /> : <CategoryArticleBody rssUrl={rssUrl} />}
-                          <Footer/>
+                                  <Footer/>
                           </div>
                           );
                           };
