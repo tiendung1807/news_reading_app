@@ -1,35 +1,36 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './Component/Header';
 import Footer from './Component/Footer';
-import CategoryArticleBody from "./Component/CategoryArticleBody";
-import HomeBody from "./Component/HomeBody";
-import Detail from "./Component/detail/Detail";
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import CategoryArticleBody from './Component/CategoryArticleBody';
+import HomeBody from './Component/HomeBody';
+import ArticleDetail from './Component/ArticleDetail';
 
 const App: React.FC = () => {
-                              const [currentComponent, setCurrentComponent] = useState<'home' | 'category'>('home');
-                              const [rssUrl, setRssUrl] = useState("https://thethao247.vn/bong-da-viet-nam-c1.rss")
-                          const handleCategoryChange = (newRssUrl: string) => {
-                          setRssUrl(newRssUrl);
-                          setCurrentComponent('category');
-                          }
-                              const handleHomeClick = () => {
-                          setCurrentComponent('home');
-                          };
-                              return (
-                              <div>
-                                  <Header onCategoryChange={handleCategoryChange} onHomeClick={handleHomeClick}/>
-                                  <Router>
-                                      <Routes>
-                                          <Route path="/">
-                                              <Route path='/detail/:link' element={<Detail/>}></Route>
-                                          </Route>
-                                      </Routes>
-                                  </Router>
-                          {currentComponent === 'home' ? <HomeBody /> : <CategoryArticleBody key={rssUrl} rssUrl={rssUrl} />}
-                                  <Footer/>
-                          </div>
-                          );
-                          };
+    const [rssUrl, setRssUrl] = useState("https://thethao247.vn/bong-da-viet-nam-c1.rss");
+
+    const handleCategoryChange = (newRssUrl: string) => {
+        setRssUrl(newRssUrl);
+    }
+
+    const handleHomeClick = () => {
+        setRssUrl('');
+    };
+
+    return (
+        <Router>
+            <div>
+                <Header onCategoryChange={handleCategoryChange} onHomeClick={handleHomeClick} />
+                <Routes>
+                    <Route path="/" element={<HomeBody />} />
+                    <Route path="/category" element={<CategoryArticleBody key={rssUrl} rssUrl={rssUrl} />} />
+                    <Route path="/article/:link" element={<ArticleDetail />} />
+                </Routes>
+                <Footer />
+            </div>
+        </Router>
+    );
+};
+
 export default App;
