@@ -2,8 +2,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios'; // Thư viện để đọc rss
 import cheerio from 'cheerio'; // Thư viện xử lý rss
-import styles from '../detail/Detail.module.css';
+import styles from '../CSS/ArticleDetail.module.css';
 import {Link, useParams} from 'react-router-dom';
+import {FaRegMessage, FaVolumeHigh, FaVolumeOff} from 'react-icons/fa6';
 // import {useDispatch, useSelector} from 'react-redux'; // để lưu trữ dữ liệu cho project
 
 // Định nghĩa interface cho chi tiết bài viết
@@ -56,6 +57,8 @@ const Detail: React.FC = () => {
         const parts = url.split('/');
         return parts[parts.length - 1];
     };
+
+    //chuc năng đọc
     const [isReading, setIsReading] = useState(false);
 
     const synth = window.speechSynthesis;
@@ -155,12 +158,15 @@ const Detail: React.FC = () => {
             if (container) {
                 const secretElements = container.querySelectorAll('[data-src]');
                 secretElements.forEach((element) => {
-                    element.setAttribute('src', element.getAttribute("data-src") || ''); // Thêm thuộc tính bạn cần vào đây
+                    element.setAttribute('src', element.getAttribute("data-src") || '');
+                    // Thêm thuộc tính bạn cần vào đây
                 });
                 const reLink = container.querySelectorAll('.explus_related_1404022217_item a');
                 reLink.forEach((element) => {
-                    let originalUrl = element.getAttribute("href") || ''; // Lấy đường dẫn gốc từ href
-                    element.setAttribute('href', "/detail" + extractLinkPath(originalUrl)); // Cập nhật lại thuộc tính href của thẻ <a>
+                    let originalUrl = element.getAttribute("href") || '';
+                    // Lấy đường dẫn gốc từ href
+                    element.setAttribute('href', "/article" + extractLinkPath(originalUrl));
+                    // Cập nhật lại thuộc tính href của thẻ <a>
                 });
             }
         }
@@ -179,6 +185,13 @@ const Detail: React.FC = () => {
                     </ul>
                     <div>{detail?.dateUp}</div>
                 </div>
+                <div className={styles.audioControls}>
+                    {isReading ? (
+                        <FaVolumeOff onClick={handleStopReading} className={styles.audioIcon} title={"Dừng"}/>
+                    ) : (
+                        <FaVolumeHigh onClick={handleReadText} className={styles.audioIcon} title={"Nghe"}/>
+                    )}
+                </div>
                 <div>
                     <h1 className={styles.contentDetailTitle}>{detail?.title || 'Loading...'}</h1>
                     <h2 className={styles.contentDetailSapo}>{detail?.demo}</h2>
@@ -193,11 +206,13 @@ const Detail: React.FC = () => {
                 <div>
                     {feedItems.map((item, index) => (
                         <div className={styles.horizontalItem} key={index}>
-                            <span style={{fontSize:'20px',paddingRight:'10px',paddingTop:'25px',fontWeight:'700',color:'#ababab'}}>{index + 1}</span>
+                            <span style={{
+                                fontSize: '20px',
+                                paddingRight:'10px',paddingTop:'25px',fontWeight:'700',color:'#ababab'}}>{index + 1}</span>
                             <div className={styles.horizontalImage}><img src={item.imageUrl || 'Loading...'}
                                                                          alt={item.title}/></div>
                             <div className={styles.horizontalTitle}><h3><a
-                                href={'/detail/' + extractLinkPath(item.link)}
+                                href={'/article/' + extractLinkPath(item.link)}
                                 title={item.title}>{item.title}</a></h3>
                             </div>
                         </div>
