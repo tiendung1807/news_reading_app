@@ -1,170 +1,226 @@
-import React, { useState, useEffect } from 'react';
-import '../CSS/RSSFeed.css';
-import SortComponent from './SortComponent';
-import FeedDetail from './FeedDetail';
+// export default Detail;
+import React, {useEffect, useState} from 'react';
+import axios from 'axios'; // Thư viện để đọc rss
+import cheerio from 'cheerio'; // Thư viện xử lý rss
+import styles from '../CSS/ArticleDetail.module.css';
+import {Link, useParams} from 'react-router-dom';
+import {FaRegMessage, FaVolumeHigh, FaVolumeOff} from 'react-icons/fa6';
+// import {useDispatch, useSelector} from 'react-redux'; // để lưu trữ dữ liệu cho project
 
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-
-interface RssItem {
+// Định nghĩa interface cho chi tiết bài viết
+interface DetailContent {
     title: string;
-    link: string;
-    description: string;
-    pubDate: string;
+    demo: string;
+    content: string;
+    dateUp: string;
+    navItems: string[];
 }
 
-const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'short',
-    };
-    return new Intl.DateTimeFormat('vi', options).format(date);
-};
+interface FeedItem {
+    title: string;
+    link: string;
+    imageUrl: string;
+}
 
-const parseRSSItems = (xml: Document): RssItem[] => {
-    const items = xml.querySelectorAll('item');
-    return Array.from(items, (item) => ({
-        title: item.querySelector('title')?.textContent || '',
-        link: item.querySelector('link')?.textContent || '',
-        description: item.querySelector('description')?.textContent || '',
-        pubDate: item.querySelector('pubDate')?.textContent || '',
-    }));
-};
-
-const RSSFeed: React.FC = () => {
-    const [visibleItemsCount, setVisibleItemsCount] = useState(10);
-    const [rssItems, setRssItems] = useState<RssItem[]>([]);
-    const [sortKey, setSortKey] = useState<string>('pubDate');
-    const [sortOrder, setSortOrder] = useState<string>('asc');
-    const [selectedLink, setSelectedLink] = useState<string | null>(null);
-    const rssUrl = 'https://thethao247.vn/trang-chu.rss';
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${CORS_PROXY}${rssUrl}`);
-                if (!response.ok) {
-                    throw new Error('Không thể tải dữ liệu RSS');
-                }
-                const text = await response.text();
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, 'text/xml');
-                const rssItemsArray = parseRSSItems(xml);
-                setRssItems(rssItemsArray);
-            } catch (error) {
-                console.error('Lỗi khi lấy dữ liệu RSS:', error);
-            }
+const Detail: React.FC = () => {
+    const {link} = useParams<{ link: string }>();
+    const [detail, setDetail] = useState<DetailContent | null>(null);
+    const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+    const [commentContent, setCommentContent] = useState<string>(''); // State để lưu nội dung bình luận
+    function convertToSlug(text: string) {
+        let slug = text.toLowerCase();
+        slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        slug = slug.replace(/\s+/g, '-');
+        return slug;
+    }
+    // hàm chuển đổi chuỗi có các ký tự đặc biệt
+    function decodeHTMLEntities(text: string): string {
+        const entities: { [key: string]: string } = {
+            '&apos;': "'",
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
         };
 
-        fetchData();
-    }, [rssUrl]);
+        Object.keys(entities).forEach(entity => {
+            const regex = new RegExp(entity, 'g');
+            text = text.replace(regex, entities[entity]);
+        });
 
-    const sortedItems = [...rssItems].sort((a, b) => {
-        if (sortKey === 'pubDate') {
-            return sortOrder === 'asc'
-                ? new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime()
-                : new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
-        } else if (sortKey === 'title') {
-            return sortOrder === 'asc'
-                ? a.title.localeCompare(b.title)
-                : b.title.localeCompare(a.title);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        return doc.documentElement.textContent || text;
+    }
+
+    const extractLinkPath = (url: string) => {
+        const parts = url.split('/');
+        return parts[parts.length - 1];
+    };
+
+    //chuc năng đọc
+    const [isReading, setIsReading] = useState(false);
+
+    const synth = window.speechSynthesis;
+    const handleReadText = () => {
+        if (synth.speaking) {
+            synth.cancel();
+            setIsReading(false);
+            return;
         }
-        return 0;
-    });
-
-    const handleLoadMore = () => {
-        setVisibleItemsCount(prevCount => prevCount + 3);
+        const textToRead = detail?.content.replace(/<[^>]*>?/gm, '') || '';
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'vi-VN'; // Thiết lập ngôn ngữ tiếng Việt
+        utterance.onend = () => {
+            setIsReading(false);
+        };
+        synth.speak(utterance);
+        setIsReading(true);
+    };
+    const handleStopReading = () => {
+        if (synth.speaking) {
+            synth.cancel();
+            setIsReading(false);
+        }
     };
 
-    const handleItemClick = (link: string) => {
-        setSelectedLink(link);
-    };
+    useEffect(() => {
+        async function fetch() {
+            try {
+                const response = await axios.get(`https://thethao247.vn/${link}`);
+                const html = response.data;
+                const $ = cheerio.load(html);
 
-    const handleCloseDetail = () => {
-        setSelectedLink(null);
-    };
+                // Sửa các lớp CSS trong HTML để sử dụng className thay vì class
+                $('[class]').each((index, element) => {
+                    const classes = $(element).attr('class')?.split(' ') || [];
+                    classes.forEach(className => {
+                        $(element).removeClass(className).addClass(className);
+                    });
+                });
+
+                // Extract content from the HTML as per your requirement
+                const title = decodeHTMLEntities($('.big_title').text().trim() || $('.title-detail').text().trim());
+                const content = $('#content_detail').html() || $('.txt_content').html() || $('.col740').html() || '';
+                const dateUp = $('.mr-auto').find('.post-time').text() || $('.time').text();
+                console.log('dateUp : ' + $('.mr-auto').find('.post-time').text())
+                const demo = decodeHTMLEntities($('.sapo_detail').text());
+                const img = $('.expNoEdit').find('a').find('img').attr("data-src");
+                const navElements = $('.breadcrumb a').toArray();
+                const navItems = navElements.map((li) => $(li).text().trim());
+                const navItemsFiltered = navItems.slice(1);  // Loại bỏ phần tử đầu tiên
+                setDetail({title, demo, content, dateUp, navItems: navItemsFiltered});
+                const rssUrl = 'https://thethao247.vn/trang-chu.rss';
+                const fetchRSS = async () => {
+                    try {
+                        const response = await axios.get(rssUrl);
+                        const data = response.data;
+
+                        // Parse RSS feed
+                        const parser = new DOMParser();
+                        const xml = parser.parseFromString(data, 'application/xml');
+
+                        const items = Array.from(xml.querySelectorAll('item')).map(item => {
+                            const title = decodeHTMLEntities(item.querySelector('title')?.textContent || '');
+                            const link = item.querySelector('link')?.textContent || '';
+                            const description = item.querySelector('description')?.textContent || '';
+
+                            // Use cheerio to parse the description HTML and extract the image URL
+                            const $ = cheerio.load(description);
+                            const imageUrl = $('img').attr('src') || '';
+                            return {
+                                title,
+                                link,
+                                imageUrl
+                            };
+                        });
+                        setFeedItems(items);
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                };
+                fetchRSS();
+            } catch (error) {
+                console.error('Error fetching the HTML:', error);
+            }
+        }
+
+        fetch();
+    }, [link]);
+    useEffect(() => {
+        if (feedItems.length > 5) {
+            setFeedItems(feedItems.slice(0, 5)); // Chỉ lấy 5 phần tử đầu tiên
+        }
+    }, [feedItems]);
+    useEffect(() => {
+        if (detail?.content) {
+            const container = document.getElementById('maincontent');
+            if (container) {
+                const secretElements = container.querySelectorAll('[data-src]');
+                secretElements.forEach((element) => {
+                    element.setAttribute('src', element.getAttribute("data-src") || '');
+                    // Thêm thuộc tính bạn cần vào đây
+                });
+                const reLink = container.querySelectorAll('.explus_related_1404022217_item a');
+                reLink.forEach((element) => {
+                    let originalUrl = element.getAttribute("href") || '';
+                    // Lấy đường dẫn gốc từ href
+                    element.setAttribute('href', "/article" + extractLinkPath(originalUrl));
+                    // Cập nhật lại thuộc tính href của thẻ <a>
+                });
+            }
+        }
+    }, [detail]);
 
     return (
-        <main>
-            <div className="container">
-                <SortComponent setSortKey={setSortKey} setSortOrder={setSortOrder} />
-                {selectedLink ? (
-                    <FeedDetail link={selectedLink} onClose={handleCloseDetail} />
-                ) : (
-                    <div className="content">
-                        {sortedItems.length > 0 && (
-                            <div className="cover">
-                                <div className="text">
-                                    <a href={sortedItems[0].link} className="title" title={sortedItems[0].title}>
-                                        {sortedItems[0].title}
-                                    </a>
-                                    <p className="sapo" dangerouslySetInnerHTML={{__html: sortedItems[0].description}}/>
-                                    <p className="date">{formatDate(rssItems[0].pubDate)}</p>
-                                </div>
-                            </div>
-                        )}
-                        <ul className="list-news">
-                            {sortedItems.slice(1, 4).map((item, index) => (
-                                <li key={index}>
-                                    <a href={item.link} className="thumb" title={item.title}
-                                       onClick={() => handleItemClick(item.link)}>
-                                        <div
-                                            dangerouslySetInnerHTML={{__html: item.description.substring(item.description.indexOf("<img"), item.description.lastIndexOf("/>") + 3)}}/>
-                                    </a>
-                                    <h2 className="title">
-                                        <a href={item.link} title={item.title}>{item.title}</a>
-                                    </h2>
-                                    <p className="date">{formatDate(item.pubDate)}</p>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="caption">
-                            <h2>
-                                <span className="title" title="Bóng đá Việt Nam mới nhất">
-                                    <span>Mới nhất</span>
-                                </span>
-                            </h2>
-                        </div>
-                        <ul id="box_latest_more" className="box_latest_more">
-                            {sortedItems.slice(4, visibleItemsCount).map((item, index) => (
-                                <li key={index}>
-                                    <div className="text">
-                                        <div className={"adjust-title-h3"}>
-                                            <h3>
-                                                <a href={item.link} className="title" title={item.title}
-                                                   onClick={() => handleItemClick(item.link)}>{item.title}</a>
-                                            </h3>
-
-                                        </div>
-
-                                        <p className="sapo" dangerouslySetInnerHTML={{__html: item.description}}/>
-                                        <p className="date">{formatDate(item.pubDate)}</p>
-                                        <div className={"load-more-news-detail"}>
-                                            <a className="btn_loadMore-news-detail"
-                                               onClick={() => handleItemClick(item.link)}>Xem thêm
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                        {visibleItemsCount < sortedItems.length && (
-                            <div id="loadMoreNews">
-                                <button  className="btn_loadMore" onClick={handleLoadMore}>Xem thêm
-                                </button>
-                            </div>
-                        )}
+        <div className={styles.container}>
+            <div className={styles.subContainer}>
+                <div className={styles.breadCrumbDetail}>
+                    <ul>
+                        {detail?.navItems.map((navItem, index) => (
+                            <li key={index}>
+                                {index > 0 ? `> ${navItem}` : (<a href={'/' + convertToSlug(navItem)}>{navItem}</a>)}
+                            </li>
+                        ))}
+                    </ul>
+                    <div>{detail?.dateUp}</div>
+                </div>
+                <div className={styles.audioControls}>
+                    {isReading ? (
+                        <FaVolumeOff onClick={handleStopReading} className={styles.audioIcon} title={"Dừng"}/>
+                    ) : (
+                        <FaVolumeHigh onClick={handleReadText} className={styles.audioIcon} title={"Nghe"}/>
+                    )}
+                </div>
+                <div>
+                    <h1 className={styles.contentDetailTitle}>{detail?.title || 'Loading...'}</h1>
+                    <h2 className={styles.contentDetailSapo}>{detail?.demo}</h2>
+                    <div className={styles.maincontent} id="maincontent"
+                         dangerouslySetInnerHTML={{__html: detail?.content || ''}}>
                     </div>
-                )}
+                </div>
             </div>
-        </main>
+            {/*Bài liên quan*/}
+            <div className={styles.relateDetail}>
+                <h2 className={styles.horizontalHeading}>BÀI LIÊN QUAN</h2>
+                <div>
+                    {feedItems.map((item, index) => (
+                        <div className={styles.horizontalItem} key={index}>
+                            <span style={{
+                                fontSize: '20px',
+                                paddingRight:'10px',paddingTop:'25px',fontWeight:'700',color:'#ababab'}}>{index + 1}</span>
+                            <div className={styles.horizontalImage}><img src={item.imageUrl || 'Loading...'}
+                                                                         alt={item.title}/></div>
+                            <div className={styles.horizontalTitle}><h3><a
+                                href={'/article/' + extractLinkPath(item.link)}
+                                title={item.title}>{item.title}</a></h3>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
     );
 };
 
-export default RSSFeed;
+export default Detail;
