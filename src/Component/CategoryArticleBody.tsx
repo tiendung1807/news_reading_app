@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../CSS/CategoryArticleBody.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +14,6 @@ interface RssItem {
     title: string;
     link: string;
     description: string;
-    aHref: string;
     imgUrl: string;
     textContent: string;
     pubDate: string;
@@ -22,26 +22,6 @@ interface RssItem {
 interface CategoryArticleBodyProps {
     rssUrl: string;
 }
-
-const extractImageUrlFromDescription = (description: string): string => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(description, 'text/html');
-    const img = doc.querySelector('img');
-    return img ? img.src : '';
-};
-
-const extractLinkUrlFromDescription = (description: string): string => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(description, 'text/html');
-    const a = doc.querySelector('a');
-    return a ? a.href : '';
-};
-
-const extractTextContentFromDescription = (description: string): string => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(description, 'text/html');
-    return doc.body.textContent || '';
-};
 
 const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => {
     const [rssChannel, setRssChannel] = useState<RssChannel | null>(null);
@@ -69,14 +49,12 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
 
                 const rssItemsArray: RssItem[] = Array.from(items, (item) => {
                     const description = item.querySelector('description')?.textContent || '';
-                    const aHref = extractLinkUrlFromDescription(description);
                     const imgUrl = extractImageUrlFromDescription(description);
                     const textContent = extractTextContentFromDescription(description);
                     return {
                         title: item.querySelector('title')?.textContent || '',
                         link: item.querySelector('link')?.textContent || '',
                         description,
-                        aHref,
                         imgUrl,
                         textContent,
                         pubDate: item.querySelector('pubDate')?.textContent || ''
@@ -92,10 +70,18 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
         fetchData();
     }, [rssUrl]);
 
-    useEffect(() => {
-        setVisibleItemsCount(10);
-    }, [rssUrl]);
+    const extractImageUrlFromDescription = (description: string): string => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(description, 'text/html');
+        const img = doc.querySelector('img');
+        return img ? img.src : '';
+    };
 
+    const extractTextContentFromDescription = (description: string): string => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(description, 'text/html');
+        return doc.body.textContent || '';
+    };
 
     const handleLoadMore = () => {
         setVisibleItemsCount(prevCount => prevCount + 3);
@@ -109,67 +95,61 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                     <FontAwesomeIcon icon={faAngleRight}/>
                     <span className="active" title="Bóng đá Việt Nam">{rssChannel?.title}</span>
                 </div>
-                <div className="content">
-                    <h1 className="big_title">{rssChannel?.title}</h1>
-                    {rssItems.length > 0 && (
-                        <div className="cover">
-                            <a href={rssItems[0].link} className="thumb" title={rssItems[0].title}>
-                                <img
-                                    src={rssItems[0].imgUrl}
-                                    width="540"
-                                    height="358"
-                                    alt={rssItems[0].title}
-                                />
-                            </a>
-                            <div className="text">
-                                <a href={rssItems[0].link} className="title" title={rssItems[0].title}>
-                                    {rssItems[0].title}
-                                </a>
-                                <p className="sapo" dangerouslySetInnerHTML={{ __html: rssItems[0].textContent }}/>
-                            </div>
+                {rssItems.length > 0 && (
+                    <div className="cover">
+                        <Link to={`/article/${encodeURIComponent(rssItems[0].link)}`} className="thumb"
+                              title={rssItems[0].title}>
+                            <img
+                                src={rssItems[0].imgUrl}
+                                width="540"
+                                height="358"
+                                alt={rssItems[0].title}
+                            />
+                        </Link>
+                        <div className="text">
+                            <Link to={`/article/${encodeURIComponent(rssItems[0].link)}`} className="title"
+                                  title={rssItems[0].title}>
+                                {rssItems[0].title}
+                            </Link>
+                            <p className="sapo" dangerouslySetInnerHTML={{__html: rssItems[0].textContent}}/>
                         </div>
-                    )}
-                    <ul className="list-news">
-                        {rssItems.slice(1, 4).map((item, index) => (
-                            <li key={index}>
-                                <a href={item.link} className="thumb" title={item.title}>
-                                    <img
-                                        src={item.imgUrl}
-                                        width="400"
-                                        height="264"
-                                        alt={item.title}
-                                    />
-                                </a>
-                                <h2 className="title">
-                                    <a href={item.link} title={item.title}>{item.title}</a>
-                                </h2>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="caption">
-                    <h2>
-                        <span className="title" title="Bóng đá Việt Nam mới nhất">
-                            <span>Mới nhất</span>
-                        </span>
-                    </h2>
-                </div>
+                    </div>
+                )}
+                <ul className="list-news">
+                    {rssItems.slice(1, 4).map((item, index) => (
+                        <li key={index}>
+                            <Link to={`/article/${encodeURIComponent(item.link)}`} className="thumb" title={item.title}>
+                                <img
+                                    src={item.imgUrl}
+                                    width="400"
+                                    height="264"
+                                    alt={item.title}
+                                />
+                            </Link>
+                            <h2 className="title">
+                                <Link to={`/article/${encodeURIComponent(item.link)}`}
+                                      title={item.title}>{item.title}</Link>
+                            </h2>
+                        </li>
+                    ))}
+                </ul>
                 <ul id="box_latest_more" className="box_latest_more">
                     {rssItems.slice(4, visibleItemsCount).map((item, index) => (
                         <li key={index}>
-                            <a href={item.link} className="thumb" title={item.title}>
+                            <Link to={`/article/${encodeURIComponent(item.link)}`} className="thumb" title={item.title}>
                                 <img
                                     src={item.imgUrl}
                                     width="392"
                                     height="250"
                                     alt={item.title}
                                 />
-                            </a>
+                            </Link>
                             <div className="text">
                                 <h3>
-                                    <a href={item.link} className="title" title={item.title}>{item.title}</a>
+                                    <Link to={`/article/${encodeURIComponent(item.link)}`} className="title"
+                                          title={item.title}>{item.title}</Link>
                                 </h3>
-                                <p className="sapo" dangerouslySetInnerHTML={{ __html: item.textContent }}/>
+                                <p className="sapo" dangerouslySetInnerHTML={{__html: item.textContent}}/>
                             </div>
                         </li>
                     ))}
