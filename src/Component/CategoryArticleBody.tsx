@@ -28,8 +28,9 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
     const [rssChannel, setRssChannel] = useState<RssChannel | null>(null);
     const [rssItems, setRssItems] = useState<RssItem[]>([]);
     const [visibleItemsCount, setVisibleItemsCount] = useState(10);
-    const [sortKey, setSortKey] = useState<string>('pubDate');
     const [sortOrder, setSortOrder] = useState<string>('desc');
+    const [sortKey, setSortKey] = useState<string>('pubDate');
+
 
     useEffect(() => {
         const fetchData = async () => {

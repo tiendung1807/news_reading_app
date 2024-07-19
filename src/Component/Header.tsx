@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React ,{ useState }from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 import '../CSS/Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -7,9 +7,11 @@ import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 interface HeaderProps {
     onCategoryChange: (rssUrl: string) => void;
     onHomeClick: () => void;
+    onSearch: (keyword: string) => void; // Add a new prop for search callback
+
 }
 
-const Header: React.FC<HeaderProps> = ({ onCategoryChange, onHomeClick }) => {
+const Header: React.FC<HeaderProps> = ({ onCategoryChange, onHomeClick, onSearch    }) => {
     const BDVN = [
         { name: 'Bóng đá việt nam', url: 'https://thethao247.vn/bong-da-viet-nam-c1.rss' },
         { name: 'V-League', url: 'https://thethao247.vn/v-league-c15.rss' },
@@ -45,6 +47,15 @@ const Header: React.FC<HeaderProps> = ({ onCategoryChange, onHomeClick }) => {
     ];
 
     const KD = { name: 'Khỏe & đẹp', url: 'https://thethao247.vn/list-c261.rss' };
+
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const navigate = useNavigate(); // Use useNavigate here
+
+    const handleSearchSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        onSearch(searchKeyword); // Call the parent component's handler
+        navigate('/search'); // Navigate to search results page
+    };
 
     const handleCategoryClick = (url: string) => {
         onCategoryChange(url);
@@ -187,8 +198,14 @@ const Header: React.FC<HeaderProps> = ({ onCategoryChange, onHomeClick }) => {
                                 </li>
                             </ul>
                             <div className="topsearch">
-                                <form action="/search" method="get">
-                                    <input type="text" name="q" placeholder="Tìm kiếm..." className="search-input"/>
+                                <form onSubmit={handleSearchSubmit}>
+                                    <input
+                                        type="text"
+                                        placeholder="Tìm kiếm..."
+                                        value={searchKeyword}
+                                        onChange={(e) => setSearchKeyword(e.target.value)}
+                                        className="search-input"
+                                    />
                                     <button type="submit" className="search-button">
                                         <FontAwesomeIcon icon={faSearch} aria-hidden="true"/>
                                     </button>
