@@ -1,0 +1,23 @@
+$color_1: #fff;
+$background-color_1: #fff;
+$background-color_2: #007bff;
+$background-color_3: #0056b3;
+
+.feed-detail {
+    padding: 20px;
+    background-color: $background-color_1;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    button {
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background-color: $background-color_2;
+        color: $color_1;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover {
+            background-color: $background-color_3;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import '../CSS/SearchResult.css';
+import '../SCSS/SearchResult.scss';
 
 interface RssItem {
     title: string;

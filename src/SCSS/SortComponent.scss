@@ -1,0 +1,38 @@
+$color_1: #333;
+$background-color_1: #fff;
+
+/* SortComponent.css */
+.sort-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    label {
+        font-size: 14px;
+        color: $color_1;
+        margin-right: 10px;
+    }
+    select {
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        color: $color_1;
+        background-color: $background-color_1;
+        margin-right: 10px;
+    }
+}
+.sort-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    select {
+        margin-right: 20px;
+        padding: 5px;
+        font-size: 14px;
+    }
+}

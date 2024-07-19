@@ -1,0 +1,193 @@
+$color_1: #666;
+$color_2: #007bff;
+$color_3: #000;
+$color_4: #fff;
+$color_5: #ccc;
+$color_6: #333;
+$background-color_1: #007bff;
+$background-color_2: #0056b3;
+
+/* CategoryArticleBody.css */
+.container {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+}
+.breadcrumb {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: $color_1;
+    a {
+        color: $color_2;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    a.active {
+        color: $color_3;
+    }
+}
+.cover {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .thumb {
+        flex: 0 0 40%;
+        position: relative;
+        display: block;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+    }
+    .text {
+        flex: 1;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: $color_4;
+        text-align: left;
+        transition: background 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-radius: 0 10px 10px 0;
+        &:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+    }
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: $color_4;
+    }
+    .sapo {
+        font-size: 16px;
+        color: $color_5;
+        margin-top: 5px;
+        line-height: 1.6;
+    }
+}
+.list-news {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    li {
+        flex: 1 1 calc(33.333% - 20px);
+        max-width: calc(33.333% - 20px);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    }
+    .thumb {
+        display: block;
+        border-bottom: 2px solid #007bff;
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    }
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 10px 15px;
+        color: $color_6;
+    }
+    .sapo {
+        font-size: 14px;
+        color: $color_1;
+        margin: 0 15px 10px 15px;
+    }
+}
+.caption {
+    margin-top: 30px;
+    text-align: center;
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: $color_2;
+        text-decoration: none;
+        span {
+            color: $color_6;
+        }
+    }
+}
+.box_latest_more {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    li {
+        flex: 1 1 calc(33.333% - 20px);
+        max-width: calc(33.333% - 20px);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    }
+    .thumb {
+        display: block;
+        border-bottom: 2px solid #007bff;
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    }
+    .text {
+        padding: 10px 15px;
+    }
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        color: $color_6;
+    }
+}
+.sapo {
+    font-size: 14px;
+    color: $color_1;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+.btn_loadMore {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: $background-color_1;
+    color: $color_4;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 120px;
+    text-align: center;
+    &:hover {
+        background-color: $background-color_2;
+    }
+}

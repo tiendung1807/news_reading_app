@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CSS/SortComponent.css';
+import '../SCSS/SortComponent.scss';
 
 interface SortComponentProps {
     setSortKey: (key: string) => void;

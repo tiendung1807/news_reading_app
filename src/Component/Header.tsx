@@ -1,6 +1,6 @@
 import React ,{ useState }from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import '../CSS/Header.css';
+import '../SCSS/Header.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons';
 

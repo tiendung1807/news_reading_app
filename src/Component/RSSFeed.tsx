@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../CSS/RSSFeed.css';
+import '../SCSS/RSSFeed.scss';
 import SortComponent from './SortComponent';
 import FeedDetail from './FeedDetail';
 

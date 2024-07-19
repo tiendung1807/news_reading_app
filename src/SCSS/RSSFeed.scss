@@ -1,0 +1,110 @@
+$color_1: #343a40;
+$color_2: #007bff;
+$color_3: #495057;
+$color_4: #6c757d;
+$color_5: #ffffff;
+$font-family_1: 'Arial', sans-serif;
+$background-color_1: #ffffff;
+$background-color_2: #f8f9fa;
+$background-color_3: #007bff;
+$background-color_4: #0056b3;
+
+/* General styling for HomeBody */
+/* Styling for the publication date */
+/* Styling for the load more button */
+/* Additional styling for readability */
+.homebody {
+    padding: 20px 0;
+    background-color: $background-color_1;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    p {
+        line-height: 1.5;
+    }
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.cover {
+    margin-bottom: 20px;
+    background-color: $background-color_2;
+    border-radius: 8px;
+    overflow: hidden;
+    .text {
+        padding: 20px;
+    }
+}
+.homebody-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: $color_1;
+}
+.homebody-item {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 20px;
+    align-items: flex-start;
+}
+.homebody-item-image {
+    img {
+        max-width: 200px;
+        height: auto;
+        margin-right: 20px;
+        border-radius: 4px;
+    }
+}
+.homebody-item-content {
+    flex: 1;
+}
+.homebody-item-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    a {
+        text-decoration: none;
+        color: $color_2;
+        font-weight: bold;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+.homebody-item-description {
+    margin-bottom: 10px;
+    color: $color_3;
+}
+.homebody-item-pub-date {
+    font-size: 0.875rem;
+    color: $color_4;
+}
+.pubDate {
+    font-size: 0.875rem;
+    color: $color_4;
+    margin-top: 5px;
+    font-family: $font-family_1;
+}
+.btn_loadMore {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: $color_5;
+    background-color: $background-color_3;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: $background-color_4;
+    }
+    svg {
+        margin-left: 5px;
+    }
+}
