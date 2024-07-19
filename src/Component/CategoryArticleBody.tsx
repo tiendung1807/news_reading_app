@@ -55,9 +55,13 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                     const description = item.querySelector('description')?.textContent || '';
                     const imgUrl = extractImageUrlFromDescription(description);
                     const textContent = extractTextContentFromDescription(description);
+                    console.log(item.querySelector('link')?.textContent);
+                    const link1 = item.querySelector('link')?.textContent?.slice(22);
+
                     return {
                         title: item.querySelector('title')?.textContent || '',
-                        link: item.querySelector('link')?.textContent || '',
+                        link: link1 || '',
+
                         description,
                         imgUrl,
                         textContent,
