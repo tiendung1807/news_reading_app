@@ -25,8 +25,8 @@ const SortComponent: React.FC<SortComponentProps> = ({ setSortKey, setSortOrder 
             <label htmlFor="sortOrder">Thứ tự:</label>
             <select id="sortOrder" onChange={handleSortOrderChange}>
 
-                <option value="asc">Cũ nhất (Tăng dần)</option>
-                <option value="desc">Mới nhất (Giảm dần)</option>
+                <option value="asc">Tăng dần</option>
+                <option value="desc">Giảm dần</option>
             </select>
         </div>
     );

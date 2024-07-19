@@ -8,7 +8,7 @@ import HomeBody from './Component/HomeBody';
 import ArticleDetail from './Component/ArticleDetail';
 
 const App: React.FC = () => {
-    const [rssUrl, setRssUrl] = useState("https://thethao247.vn/bong-da-viet-nam-c1.rss");
+    const [rssUrl, setRssUrl] = useState("");
 
     const handleCategoryChange = (newRssUrl: string) => {
         setRssUrl(newRssUrl);

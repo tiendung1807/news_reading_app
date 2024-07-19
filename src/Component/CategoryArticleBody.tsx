@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../CSS/CategoryArticleBody.css';
+import SortComponent from './SortComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,6 +28,8 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
     const [rssChannel, setRssChannel] = useState<RssChannel | null>(null);
     const [rssItems, setRssItems] = useState<RssItem[]>([]);
     const [visibleItemsCount, setVisibleItemsCount] = useState(10);
+    const [sortKey, setSortKey] = useState<string>('pubDate');
+    const [sortOrder, setSortOrder] = useState<string>('desc');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,40 +86,60 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
         return doc.body.textContent || '';
     };
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleString(); // Format the date and time
+    };
+
     const handleLoadMore = () => {
         setVisibleItemsCount(prevCount => prevCount + 3);
     };
+
+    const sortedItems = [...rssItems].sort((a, b) => {
+        if (sortKey === 'pubDate') {
+            return sortOrder === 'asc'
+                ? new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime()
+                : new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
+        } else if (sortKey === 'title') {
+            return sortOrder === 'asc'
+                ? a.title.localeCompare(b.title)
+                : b.title.localeCompare(a.title);
+        }
+        return 0;
+    });
 
     return (
         <main>
             <div className="container">
                 <div className="breadcrumb">
-                    <a href="https://thethao247.vn" title="Trang chủ">Trang chủ</a>
-                    <FontAwesomeIcon icon={faAngleRight}/>
+                    <Link to="/" title="Trang chủ">Trang chủ</Link>
+                    <FontAwesomeIcon icon={faAngleRight} />
                     <span className="active" title="Bóng đá Việt Nam">{rssChannel?.title}</span>
                 </div>
-                {rssItems.length > 0 && (
+                <SortComponent setSortKey={setSortKey} setSortOrder={setSortOrder} />
+                {sortedItems.length > 0 && (
                     <div className="cover">
-                        <Link to={`/article/${encodeURIComponent(rssItems[0].link)}`} className="thumb"
-                              title={rssItems[0].title}>
+                        <Link to={`/article/${encodeURIComponent(sortedItems[0].link)}`} className="thumb"
+                              title={sortedItems[0].title}>
                             <img
-                                src={rssItems[0].imgUrl}
+                                src={sortedItems[0].imgUrl}
                                 width="540"
                                 height="358"
-                                alt={rssItems[0].title}
+                                alt={sortedItems[0].title}
                             />
                         </Link>
                         <div className="text">
-                            <Link to={`/article/${encodeURIComponent(rssItems[0].link)}`} className="title"
-                                  title={rssItems[0].title}>
-                                {rssItems[0].title}
+                            <Link to={`/article/${encodeURIComponent(sortedItems[0].link)}`} className="title"
+                                  title={sortedItems[0].title}>
+                                {sortedItems[0].title}
                             </Link>
-                            <p className="sapo" dangerouslySetInnerHTML={{__html: rssItems[0].textContent}}/>
+                            <p className="sapo" dangerouslySetInnerHTML={{ __html: sortedItems[0].textContent }} />
+                            <p className="pubDate">{formatDate(sortedItems[0].pubDate)}</p>
                         </div>
                     </div>
                 )}
                 <ul className="list-news">
-                    {rssItems.slice(1, 4).map((item, index) => (
+                    {sortedItems.slice(1, 4).map((item, index) => (
                         <li key={index}>
                             <Link to={`/article/${encodeURIComponent(item.link)}`} className="thumb" title={item.title}>
                                 <img
@@ -130,11 +153,19 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                                 <Link to={`/article/${encodeURIComponent(item.link)}`}
                                       title={item.title}>{item.title}</Link>
                             </h2>
+                            <p className="pubDate">{formatDate(item.pubDate)}</p>
                         </li>
                     ))}
                 </ul>
+                <div className="caption">
+                    <h2>
+                        <span className="title" title="Bóng đá Việt Nam mới nhất">
+                            <span>Mới nhất</span>
+                        </span>
+                    </h2>
+                </div>
                 <ul id="box_latest_more" className="box_latest_more">
-                    {rssItems.slice(4, visibleItemsCount).map((item, index) => (
+                    {sortedItems.slice(4, visibleItemsCount).map((item, index) => (
                         <li key={index}>
                             <Link to={`/article/${encodeURIComponent(item.link)}`} className="thumb" title={item.title}>
                                 <img
@@ -149,12 +180,17 @@ const CategoryArticleBody: React.FC<CategoryArticleBodyProps> = ({ rssUrl }) => 
                                     <Link to={`/article/${encodeURIComponent(item.link)}`} className="title"
                                           title={item.title}>{item.title}</Link>
                                 </h3>
-                                <p className="sapo" dangerouslySetInnerHTML={{__html: item.textContent}}/>
+                                <p className="sapo" dangerouslySetInnerHTML={{ __html: item.textContent }} />
+                                <p className="pubDate">{formatDate(item.pubDate)}</p>
+                                <div className="read-more">
+                                    <Link to={`/article/${encodeURIComponent(item.link)}`} className="btn_readMore"
+                                          title="Read More">Đọc thêm</Link>
+                                </div>
                             </div>
                         </li>
                     ))}
                 </ul>
-                {visibleItemsCount < rssItems.length && (
+                {visibleItemsCount < sortedItems.length && (
                     <button id="loadMoreNews" className="btn_loadMore" onClick={handleLoadMore}>Xem thêm</button>
                 )}
             </div>

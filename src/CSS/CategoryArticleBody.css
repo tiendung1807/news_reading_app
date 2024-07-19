@@ -1,11 +1,15 @@
+/* CategoryArticleBody.css */
+
 .container {
     margin: 0 auto;
     max-width: 1200px;
+    padding: 20px;
 }
 
 .breadcrumb {
     font-size: 14px;
     margin-bottom: 20px;
+    color: #666;
 }
 
 .breadcrumb a {
@@ -23,7 +27,7 @@
 
 .cover {
     display: flex;
-    align-items: stretch; /* Đảm bảo các thành phần bên trong căn chỉnh theo chiều cao */
+    align-items: stretch;
     margin-bottom: 20px;
     border-radius: 10px;
     overflow: hidden;
@@ -31,17 +35,17 @@
 }
 
 .cover .thumb {
-    flex: 0 0 40%; /* Điều chỉnh tỷ lệ chiều rộng của hình ảnh */
+    flex: 0 0 40%;
     position: relative;
     display: block;
     overflow: hidden;
 }
 
 .cover .thumb img {
-    width: 100%; /* Đảm bảo hình ảnh đầy đủ chiều rộng và không bị vỡ */
+    width: 100%;
     height: auto;
     display: block;
-    object-fit: cover; /* Đảm bảo hình ảnh bao phủ đầy đủ khu vực */
+    object-fit: cover;
 }
 
 .cover .text {
@@ -54,7 +58,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-radius: 0 10px 10px 0; /* Điều chỉnh bo góc cho phần nội dung */
+    border-radius: 0 10px 10px 0;
 }
 
 .cover .title {
@@ -68,26 +72,11 @@
     font-size: 16px;
     color: #ccc;
     margin-top: 5px;
-    line-height: 1.6; /* Điều chỉnh khoảng cách giữa các dòng */
+    line-height: 1.6;
 }
 
 .cover .text:hover {
     background: rgba(0, 0, 0, 0.9);
-}
-
-
-.content {
-    flex: 1;
-    padding: 20px;
-    text-align: center;
-}
-
-.big_title {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-    text-transform: uppercase;
 }
 
 .list-news {
@@ -103,18 +92,21 @@
 .list-news li {
     flex: 1 1 calc(33.333% - 20px);
     max-width: calc(33.333% - 20px);
-}
-
-.list-news .thumb {
-    display: block;
+    background: #fff;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.list-news .thumb:hover {
+.list-news li:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.list-news .thumb {
+    display: block;
+    border-bottom: 2px solid #007bff;
 }
 
 .list-news .thumb img {
@@ -126,8 +118,14 @@
 .list-news .title {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 10px;
+    margin: 10px 15px;
     color: #333;
+}
+
+.list-news .sapo {
+    font-size: 14px;
+    color: #666;
+    margin: 0 15px 10px 15px;
 }
 
 .caption {
@@ -160,18 +158,21 @@
 .box_latest_more li {
     flex: 1 1 calc(33.333% - 20px);
     max-width: calc(33.333% - 20px);
-}
-
-.box_latest_more .thumb {
-    display: block;
+    background: #fff;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.box_latest_more .thumb:hover {
+.box_latest_more li:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.box_latest_more .thumb {
+    display: block;
+    border-bottom: 2px solid #007bff;
 }
 
 .box_latest_more .thumb img {
@@ -181,7 +182,7 @@
 }
 
 .box_latest_more .text {
-    margin-top: 10px;
+    padding: 10px 15px;
 }
 
 .box_latest_more .title {
@@ -191,23 +192,24 @@
 }
 
 .sapo {
-    font-size: 16px;
+    font-size: 14px;
     color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
 }
 
 .btn_loadMore {
-    display: block; /* Đảm bảo nút button sẽ chiếm toàn bộ chiều ngang của phần chứa */
-    margin: 20px auto; /* Đưa nút về giữa màn hình */
+    display: block;
+    margin: 20px auto;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s;
-    width: 120px; /* Điều chỉnh chiều rộng của button */
-    text-align: center; /* Căn văn bản vào giữa */
+    width: 120px;
+    text-align: center;
 }
-
 
 .btn_loadMore:hover {
     background-color: #0056b3;
