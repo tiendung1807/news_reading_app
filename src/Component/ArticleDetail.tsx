@@ -158,12 +158,15 @@ const Detail: React.FC = () => {
             if (container) {
                 const secretElements = container.querySelectorAll('[data-src]');
                 secretElements.forEach((element) => {
-                    element.setAttribute('src', element.getAttribute("data-src") || ''); // Thêm thuộc tính bạn cần vào đây
+                    element.setAttribute('src', element.getAttribute("data-src") || '');
+                    // Thêm thuộc tính bạn cần vào đây
                 });
                 const reLink = container.querySelectorAll('.explus_related_1404022217_item a');
                 reLink.forEach((element) => {
-                    let originalUrl = element.getAttribute("href") || ''; // Lấy đường dẫn gốc từ href
-                    element.setAttribute('href', "/detail" + extractLinkPath(originalUrl)); // Cập nhật lại thuộc tính href của thẻ <a>
+                    let originalUrl = element.getAttribute("href") || '';
+                    // Lấy đường dẫn gốc từ href
+                    element.setAttribute('href', "/article" + extractLinkPath(originalUrl));
+                    // Cập nhật lại thuộc tính href của thẻ <a>
                 });
             }
         }
@@ -203,12 +206,13 @@ const Detail: React.FC = () => {
                 <div>
                     {feedItems.map((item, index) => (
                         <div className={styles.horizontalItem} key={index}>
-                            <span style={{fontSize: '20px',
+                            <span style={{
+                                fontSize: '20px',
                                 paddingRight:'10px',paddingTop:'25px',fontWeight:'700',color:'#ababab'}}>{index + 1}</span>
                             <div className={styles.horizontalImage}><img src={item.imageUrl || 'Loading...'}
                                                                          alt={item.title}/></div>
                             <div className={styles.horizontalTitle}><h3><a
-                                href={'/detail/' + extractLinkPath(item.link)}
+                                href={'/article/' + extractLinkPath(item.link)}
                                 title={item.title}>{item.title}</a></h3>
                             </div>
                         </div>
@@ -218,5 +222,6 @@ const Detail: React.FC = () => {
         </div>
     );
 };
+
 
 export default Detail;
