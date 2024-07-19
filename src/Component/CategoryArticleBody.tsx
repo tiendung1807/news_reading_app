@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../CSS/CategoryArticleBody.css';
+import '../SCSS/CategoryArticleBody.scss';
 import SortComponent from './SortComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';

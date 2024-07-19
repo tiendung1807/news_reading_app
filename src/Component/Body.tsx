@@ -1,6 +1,6 @@
 import React from 'react'
-import '../CSS/Body.css'
-import '../CSS/main.css'
+import '../SCSS/Body.css'
+import '../SCSS/main.css'
 
 function Body(){
     return (

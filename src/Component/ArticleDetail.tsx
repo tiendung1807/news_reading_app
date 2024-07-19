@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios'; // Thư viện để đọc rss
 import cheerio from 'cheerio'; // Thư viện xử lý rss
-import styles from '../CSS/ArticleDetail.module.css';
+import styles from '../SCSS/ArticleDetail.module.scss';
 import {Link, useParams} from 'react-router-dom';
 import {FaRegMessage, FaVolumeHigh, FaVolumeOff} from 'react-icons/fa6';
 // import {useDispatch, useSelector} from 'react-redux'; // để lưu trữ dữ liệu cho project
@@ -91,7 +91,7 @@ const Detail: React.FC = () => {
                 const html = response.data;
                 const $ = cheerio.load(html);
 
-                // Sửa các lớp CSS trong HTML để sử dụng className thay vì class
+                // Sửa các lớp SCSS trong HTML để sử dụng className thay vì class
                 $('[class]').each((index, element) => {
                     const classes = $(element).attr('class')?.split(' ') || [];
                     classes.forEach(className => {
